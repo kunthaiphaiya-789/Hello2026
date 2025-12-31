@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>សួស្តីឆ្នាំថ្មីគ្រួសារធំ - 2026 Countdown</title>
+    <!-- Using local fallback for Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Kantumruy+Pro:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
     <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             background: #05050a;
             color: #f8fafc;
@@ -19,6 +29,8 @@
             height: 100vh;
             margin: 0;
             position: relative;
+            min-height: 100vh;
+            min-width: 100vw;
         }
 
         /* Fixed Background Layers */
@@ -142,6 +154,7 @@
             text-align: center;
             width: 100%;
             pointer-events: none;
+            padding: 20px;
         }
 
         .big-year {
@@ -152,20 +165,37 @@
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             animation: textFlow 5s linear infinite;
         }
 
-        .year-2025 { font-size: clamp(6rem, 20vw, 15rem); line-height: 0.8; transition: all 1s ease; }
-        .year-2026 { font-size: 3rem; opacity: 0.3; margin-top: 1rem; filter: blur(2px); transition: all 1s ease; }
+        .year-2025 { 
+            font-size: clamp(4rem, 15vw, 10rem); 
+            line-height: 0.8; 
+            transition: all 1s ease; 
+            margin: 0;
+        }
+        
+        .year-2026 { 
+            font-size: 2.5rem; 
+            opacity: 0.3; 
+            margin-top: 1rem; 
+            filter: blur(2px); 
+            transition: all 1s ease;
+            margin: 0;
+        }
 
         .year-2026.released {
-            font-size: clamp(6rem, 20vw, 15rem);
+            font-size: clamp(4rem, 15vw, 10rem);
             opacity: 1;
             filter: blur(0) drop-shadow(0 0 50px rgba(255, 0, 128, 0.6));
             margin-top: -2rem;
         }
 
-        .year-2025.faded { font-size: 3rem; opacity: 0.1; }
+        .year-2025.faded { 
+            font-size: 2.5rem; 
+            opacity: 0.1; 
+        }
 
         @keyframes textFlow {
             to { background-position: 200% center; }
@@ -174,26 +204,26 @@
         .title-banner {
             font-family: 'Kantumruy Pro', sans-serif;
             font-weight: 700;
-            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
             background: linear-gradient(to right, #ff0080, #ff85a2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-top: 2rem;
             filter: drop-shadow(0 0 10px rgba(255, 0, 128, 0.3));
         }
 
         .percent-display {
             font-family: 'Bungee', cursive;
-            font-size: clamp(1.2rem, 3.5vw, 2.2rem);
+            font-size: clamp(1rem, 2.5vw, 1.8rem);
             margin-bottom: 0.5rem;
             color: #fff;
             text-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
         }
 
         .progress-track {
-            width: 600px;
-            max-width: 80%;
-            height: 10px;
+            width: min(600px, 90%);
+            height: 8px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             overflow: hidden;
@@ -206,14 +236,16 @@
             width: 0%;
             background: linear-gradient(90deg, #ff0080, #ffd700);
             box-shadow: 0 0 20px #ff0080;
+            transition: width 0.5s ease;
         }
 
         .clock-display {
             font-family: 'Bungee', cursive;
-            font-size: clamp(3rem, 10vw, 7rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             color: white;
             line-height: 1;
             letter-spacing: 2px;
+            margin: 10px 0;
         }
 
         #final-message {
@@ -222,16 +254,43 @@
             width: 100%;
             text-align: center;
             font-family: 'Pacifico', cursive;
-            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-size: clamp(2rem, 6vw, 4rem);
             color: #ff0080;
             text-shadow: 0 0 30px rgba(255, 0, 128, 0.8), 0 0 60px rgba(255, 255, 255, 0.4);
             z-index: 30;
             opacity: 0;
             transform: translateY(50px) scale(0.8);
             transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            padding: 0 20px;
         }
 
-        #final-message.show { opacity: 1; transform: translateY(0) scale(1); }
+        #final-message.show { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .year-2025 { font-size: clamp(3rem, 12vw, 8rem); }
+            .year-2026 { font-size: 2rem; }
+            .year-2026.released { font-size: clamp(3rem, 12vw, 8rem); }
+            .title-banner { font-size: clamp(1.2rem, 3.5vw, 2rem); }
+            .clock-display { font-size: clamp(2rem, 7vw, 4rem); }
+            #celestial-moon { 
+                top: 5%; 
+                right: 5%; 
+                width: clamp(80px, 12vw, 150px); 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .year-2025 { font-size: clamp(2.5rem, 10vw, 6rem); }
+            .year-2026 { font-size: 1.8rem; }
+            .year-2026.released { font-size: clamp(2.5rem, 10vw, 6rem); }
+            .clock-display { font-size: clamp(1.8rem, 6vw, 3rem); }
+            .title-banner { font-size: clamp(1rem, 3vw, 1.8rem); }
+        }
     </style>
 </head>
 <body>
@@ -244,7 +303,7 @@
     </div>
     <canvas id="fireworks-canvas"></canvas>
     <div id="celestial-moon"></div>
-    <div id="final-message">Tai Love Vannary Forever ❤️</div>
+    <div id="final-message">Big Family ❤️</div>
 
     <div class="content-layer">
         <div id="y2025" class="big-year year-2025">2025</div>
@@ -265,166 +324,233 @@
     </div>
 
     <script>
-        const gCanvas = document.getElementById('galaxy-canvas');
-        const fCanvas = document.getElementById('fireworks-canvas');
-        const gCtx = gCanvas.getContext('2d');
-        const fCtx = fCanvas.getContext('2d');
-        const atmosphere = document.getElementById('atmosphere-layer');
-        
-        let stars = [];
-        let particles = [];
-        let fireworks = [];
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const gCanvas = document.getElementById('galaxy-canvas');
+            const fCanvas = document.getElementById('fireworks-canvas');
+            const gCtx = gCanvas.getContext('2d');
+            const fCtx = fCanvas.getContext('2d');
+            const atmosphere = document.getElementById('atmosphere-layer');
+            
+            let stars = [];
+            let particles = [];
+            let fireworks = [];
+            let animationId = null;
+            let countdownId = null;
 
-        function initAtmosphere() {
-            for(let i=0; i<6; i++) {
-                const cloud = document.createElement('div');
-                cloud.className = 'cloud';
-                const size = Math.random() * 300 + 200;
-                cloud.style.width = size + 'px';
-                cloud.style.height = (size * 0.6) + 'px';
-                cloud.style.top = (Math.random() * 100) + 'vh';
-                cloud.style.animationDuration = (Math.random() * 40 + 60) + 's';
-                cloud.style.animationDelay = (Math.random() * -60) + 's';
-                atmosphere.appendChild(cloud);
-            }
-
-            setInterval(() => {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                heart.style.animationDuration = (Math.random() * 5 + 10) + 's';
-                atmosphere.appendChild(heart);
-                setTimeout(() => heart.remove(), 15000);
-            }, 800);
-        }
-
-        function resize() {
-            const dpr = window.devicePixelRatio || 1;
-            gCanvas.width = fCanvas.width = window.innerWidth * dpr;
-            gCanvas.height = fCanvas.height = window.innerHeight * dpr;
-            gCtx.scale(dpr, dpr);
-            fCtx.scale(dpr, dpr);
-            initStars();
-        }
-
-        function initStars() {
-            stars = [];
-            for(let i=0; i<400; i++) {
-                stars.push({
-                    x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight,
-                    r: Math.random() * 1.5,
-                    o: Math.random(),
-                    s: 0.005 + Math.random() * 0.01
-                });
-            }
-        }
-
-        class Firework {
-            constructor() {
-                this.x = Math.random() * window.innerWidth;
-                this.y = window.innerHeight;
-                this.ty = Math.random() * (window.innerHeight * 0.5);
-                this.color = Math.random() > 0.5 ? `hsl(330, 100%, 65%)` : `hsl(45, 100%, 65%)`;
-                this.v = 4 + Math.random() * 4;
-            }
-            update() {
-                this.y -= this.v;
-                if(this.y <= this.ty) {
-                    this.explode();
-                    return false;
+            function initAtmosphere() {
+                // Clear existing clouds
+                atmosphere.innerHTML = '';
+                
+                for(let i = 0; i < 4; i++) {
+                    const cloud = document.createElement('div');
+                    cloud.className = 'cloud';
+                    const size = Math.random() * 200 + 150;
+                    cloud.style.width = size + 'px';
+                    cloud.style.height = (size * 0.6) + 'px';
+                    cloud.style.top = (Math.random() * 100) + 'vh';
+                    cloud.style.animationDuration = (Math.random() * 30 + 50) + 's';
+                    cloud.style.animationDelay = (Math.random() * -50) + 's';
+                    atmosphere.appendChild(cloud);
                 }
-                return true;
+
+                // Create hearts
+                setInterval(() => {
+                    if (document.hidden) return; // Don't create hearts when tab is hidden
+                    
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.fontSize = (Math.random() * 15 + 8) + 'px';
+                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                    atmosphere.appendChild(heart);
+                    setTimeout(() => {
+                        if (heart.parentNode === atmosphere) {
+                            atmosphere.removeChild(heart);
+                        }
+                    }, 13000);
+                }, 1000);
             }
-            draw() {
-                fCtx.fillStyle = this.color;
-                fCtx.beginPath();
-                fCtx.arc(this.x, this.y, 2, 0, Math.PI*2);
-                fCtx.fill();
+
+            function resize() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2); // Limit DPR for performance
+                gCanvas.width = fCanvas.width = window.innerWidth * dpr;
+                gCanvas.height = fCanvas.height = window.innerHeight * dpr;
+                gCtx.scale(dpr, dpr);
+                fCtx.scale(dpr, dpr);
+                initStars();
             }
-            explode() {
-                for(let i=0; i<100; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = Math.random() * 5 + 1;
-                    particles.push({
-                        x: this.x,
-                        y: this.y,
-                        vx: Math.cos(angle) * speed,
-                        vy: Math.sin(angle) * speed,
-                        alpha: 1,
-                        color: this.color
+
+            function initStars() {
+                stars = [];
+                const starCount = Math.min(Math.floor(window.innerWidth * window.innerHeight / 4000), 300);
+                for(let i = 0; i < starCount; i++) {
+                    stars.push({
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * window.innerHeight,
+                        r: Math.random() * 1.2 + 0.3,
+                        o: Math.random() * 0.5 + 0.5,
+                        s: 0.003 + Math.random() * 0.007
                     });
                 }
             }
-        }
 
-        function render() {
-            gCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-            stars.forEach(s => {
-                s.o += s.s;
-                if(s.o > 1 || s.o < 0) s.s *= -1;
-                gCtx.globalAlpha = s.o;
-                gCtx.fillStyle = '#fff';
-                gCtx.beginPath();
-                gCtx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-                gCtx.fill();
-            });
-
-            fCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-            if(Math.random() < 0.035) fireworks.push(new Firework());
-            
-            fireworks = fireworks.filter(f => {
-                f.draw();
-                return f.update();
-            });
-
-            particles = particles.filter(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.1;
-                p.alpha -= 0.012;
-                if(p.alpha <= 0) return false;
-                fCtx.globalAlpha = p.alpha;
-                fCtx.fillStyle = p.color;
-                fCtx.beginPath();
-                fCtx.arc(p.x, p.y, 1.8, 0, Math.PI*2);
-                fCtx.fill();
-                return true;
-            });
-
-            requestAnimationFrame(render);
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
-        initAtmosphere();
-        render();
-
-        const target = new Date(2026, 0, 1, 0, 0, 0).getTime();
-        const start = new Date(2025, 0, 1, 0, 0, 0).getTime();
-
-        function updateCountdown() {
-            const now = Date.now();
-            const clock = new Date().toTimeString().split(' ')[0];
-            document.getElementById('clock').innerText = clock;
-
-            let pct = ((now - start) / (target - start)) * 100;
-            if(pct >= 100) {
-                pct = 100;
-                document.getElementById('y2025').classList.add('faded');
-                document.getElementById('y2026').classList.add('released');
-                document.getElementById('final-message').classList.add('show');
+            class Firework {
+                constructor() {
+                    this.x = Math.random() * window.innerWidth;
+                    this.y = window.innerHeight;
+                    this.ty = Math.random() * (window.innerHeight * 0.4);
+                    this.color = Math.random() > 0.5 ? `hsl(330, 100%, 65%)` : `hsl(45, 100%, 65%)`;
+                    this.v = 3 + Math.random() * 3;
+                }
+                update() {
+                    this.y -= this.v;
+                    if(this.y <= this.ty) {
+                        this.explode();
+                        return false;
+                    }
+                    return true;
+                }
+                draw() {
+                    fCtx.fillStyle = this.color;
+                    fCtx.beginPath();
+                    fCtx.arc(this.x, this.y, 2, 0, Math.PI*2);
+                    fCtx.fill();
+                }
+                explode() {
+                    const particleCount = Math.min(80, Math.floor(window.innerWidth * window.innerHeight / 20000));
+                    for(let i = 0; i < particleCount; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 4 + 1;
+                        particles.push({
+                            x: this.x,
+                            y: this.y,
+                            vx: Math.cos(angle) * speed,
+                            vy: Math.sin(angle) * speed,
+                            alpha: 1,
+                            color: this.color
+                        });
+                    }
+                }
             }
 
-            document.getElementById('percent-text').innerText = pct.toFixed(7) + '%';
-            document.getElementById('progress-bar').style.width = pct + '%';
+            function render() {
+                // Clear canvases
+                gCtx.clearRect(0, 0, gCanvas.width / (window.devicePixelRatio || 1), gCanvas.height / (window.devicePixelRatio || 1));
+                fCtx.clearRect(0, 0, fCanvas.width / (window.devicePixelRatio || 1), fCanvas.height / (window.devicePixelRatio || 1));
 
-            requestAnimationFrame(updateCountdown);
-        }
-        updateCountdown();
+                // Draw stars
+                stars.forEach(s => {
+                    s.o += s.s;
+                    if(s.o > 1 || s.o < 0.3) s.s *= -1;
+                    gCtx.globalAlpha = s.o;
+                    gCtx.fillStyle = '#fff';
+                    gCtx.beginPath();
+                    gCtx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                    gCtx.fill();
+                });
+
+                // Add fireworks occasionally
+                if(Math.random() < 0.025 && !document.hidden) {
+                    fireworks.push(new Firework());
+                }
+                
+                // Update and draw fireworks
+                fireworks = fireworks.filter(f => {
+                    f.draw();
+                    return f.update();
+                });
+
+                // Update and draw particles
+                particles = particles.filter(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.08;
+                    p.alpha -= 0.01;
+                    if(p.alpha <= 0) return false;
+                    fCtx.globalAlpha = p.alpha;
+                    fCtx.fillStyle = p.color;
+                    fCtx.beginPath();
+                    fCtx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
+                    fCtx.fill();
+                    return true;
+                });
+
+                // Limit arrays for performance
+                if (fireworks.length > 10) fireworks = fireworks.slice(-10);
+                if (particles.length > 500) particles = particles.slice(-500);
+
+                animationId = requestAnimationFrame(render);
+            }
+
+            // Countdown functionality
+            const target = new Date(2026, 0, 1, 0, 0, 0).getTime();
+            const start = new Date(2025, 0, 1, 0, 0, 0).getTime();
+
+            function updateCountdown() {
+                const now = Date.now();
+                const clock = new Date().toLocaleTimeString('km-KH', {hour12: false});
+                document.getElementById('clock').innerText = clock;
+
+                let pct = ((now - start) / (target - start)) * 100;
+                if(pct >= 100) {
+                    pct = 100;
+                    document.getElementById('y2025').classList.add('faded');
+                    document.getElementById('y2026').classList.add('released');
+                    document.getElementById('final-message').classList.add('show');
+                    
+                    // Stop countdown when reached 100%
+                    if (countdownId) {
+                        cancelAnimationFrame(countdownId);
+                    }
+                } else {
+                    pct = Math.max(0, Math.min(pct, 100)); // Clamp between 0-100
+                }
+
+                document.getElementById('percent-text').innerText = pct.toFixed(7) + '%';
+                document.getElementById('progress-bar').style.width = pct + '%';
+
+                countdownId = requestAnimationFrame(updateCountdown);
+            }
+
+            // Performance optimization for background tabs
+            let isHidden = false;
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    isHidden = true;
+                    if (animationId) {
+                        cancelAnimationFrame(animationId);
+                        animationId = null;
+                    }
+                    if (countdownId) {
+                        cancelAnimationFrame(countdownId);
+                        countdownId = null;
+                    }
+                } else {
+                    isHidden = false;
+                    if (!animationId) {
+                        animationId = requestAnimationFrame(render);
+                    }
+                    if (!countdownId) {
+                        countdownId = requestAnimationFrame(updateCountdown);
+                    }
+                }
+            });
+
+            // Initialize
+            window.addEventListener('resize', resize);
+            resize();
+            initAtmosphere();
+            animationId = requestAnimationFrame(render);
+            countdownId = requestAnimationFrame(updateCountdown);
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', function() {
+                if (animationId) cancelAnimationFrame(animationId);
+                if (countdownId) cancelAnimationFrame(countdownId);
+            });
+        });
     </script>
 </body>
 </html>
-
